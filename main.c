@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-// pai (i) (((i)-1)/2)
-// esq (i) (2*(i)+1)
-// dir (i) (2*(i)+2)
 
 typedef struct heap
 {
@@ -91,6 +88,47 @@ float heapRetira (Heap *raiz)
     raiz->n--;  // decrementa o numero de elementos.
     raiz->v[0] = raiz->v[raiz->n]; // coloca na raiz a ultima folha
     desce (raiz, 0);
+}
+
+void heapImprime (Heap *raiz, int indice)
+{
+    if (indice < raiz->n)
+    {
+        printf ("No %.0f: ", indice);
+        int esq = 2 * indice + 1;
+        int dir = 2 * indice + 2;
+        if (esq < raiz->n)
+        {
+            printf ("filho esq: %.0f, ", raiz->v[esq]);
+        }
+        else
+        {
+            printf ("filho esq: vazio, ");
+        }
+        if (dir < raiz->n)
+        {
+            printf ("filho dir: %.0f.\n", raiz->v[dir]);
+        }
+        else
+        {
+            printf ("filho dir: vazio.\n");
+        }
+        heapImprime (raiz, esq);
+        heapImprime (raiz, dir);
+    }
+}
+
+void heapBusca (Heap *raiz, float valorProcurado)
+{
+    for (int i = 0; i < raiz->n; i++)
+    {
+        if (raiz->v[i] == valorProcurado)
+        {
+            printf ("Valor encontrado no indice %d.\n", i);
+            return;
+        }
+    }
+    printf ("Valor nao encontrado.\n");
 }
 
 int main ()
