@@ -5,7 +5,7 @@ typedef struct heap
 {
     int n;
     int nMax;
-    float *v;
+    int *v;
 } Heap;
 
 Heap *heapCria (int tamanhoMax)
@@ -13,31 +13,33 @@ Heap *heapCria (int tamanhoMax)
     Heap *h = (Heap*)malloc(sizeof(Heap));
     h->n = 0;
     h->nMax = tamanhoMax;
-    h->v = (float*)malloc(tamanhoMax * sizeof(float));
+    h->v = (int*)malloc(tamanhoMax * sizeof(int));
     return h;
 }
 
-static void troca (Heap *raiz, int indiceFilho, int indicePai)
+void troca (Heap *raiz, int indiceFilho, int indicePai)
 {
-    float tmp = raiz->v[indicePai];
+    int tmp = raiz->v[indicePai];
     raiz->v[indicePai] = raiz->v[indiceFilho];
     raiz->v[indiceFilho] = tmp;
 }
 
-static void sobe (Heap *raiz, int indiceFilho)
+void sobe (Heap *raiz, int indiceFilho)
 {
     int indicePai = (indiceFilho-1)/2;
-    while (indiceFilho > 0)                                    // itera enquanto nao chegar na raiz
+    while (indiceFilho >= 0)                                    // itera enquanto nao chegar na raiz
+    {
         if (raiz->v[indicePai] >= raiz->v[indiceFilho])        // se o valor do pai for maior ou igual
         {
             break;
         }        
         else
         {
-            troca (raiz, indicePai, indiceFilho);
+            troca (raiz, indiceFilho, indicePai);
             indiceFilho = indicePai;
+            indicePai = (indiceFilho-1)/2;
         }
-    
+    }
 }
 
 int heapVazia (Heap *raiz)
@@ -51,17 +53,18 @@ void heapLibera (Heap *raiz)
     free (raiz);
 }
 
-void heapInsere (Heap *raiz, float novoValor)
+void heapInsere (Heap *raiz, int novoValor)
 {
     if (raiz->n == raiz->nMax)
     {
         printf ("Heap cheio, impossivel inserir.\n");
     }
-    raiz->v[raiz->n++] = novoValor;
+    raiz->v[raiz->n] = novoValor;
+    raiz->n++;
     sobe (raiz, raiz->n-1);
 }
 
-static void desce (Heap *raiz, int indicePai)
+void desce (Heap *raiz, int indicePai)
 {
     int indiceFilhoEsq = (2 * indicePai + 1);
     while (indiceFilhoEsq < raiz->n) // enquanto estiver nos limites da heap
@@ -82,9 +85,14 @@ static void desce (Heap *raiz, int indicePai)
     }
 }
 
-float heapRetira (Heap *raiz)
+void heapRetira (Heap *raiz)
 {
-    float valorRetirado = raiz->v[0];
+    if (heapVazia (raiz))
+    {
+        printf ("Heap vazia.\n");
+        return;
+    }
+    int valorRetirado = raiz->v[0];
     raiz->n--;  // decrementa o numero de elementos.
     raiz->v[0] = raiz->v[raiz->n]; // coloca na raiz a ultima folha
     desce (raiz, 0);
@@ -92,14 +100,19 @@ float heapRetira (Heap *raiz)
 
 void heapImprime (Heap *raiz, int indice)
 {
+    if (heapVazia(raiz))
+    {
+        printf ("Heap vazia.\n");
+        return;
+    }
     if (indice < raiz->n)
     {
-        printf ("No %.0f: ", indice);
+        printf ("No %d: ", raiz->v[indice]);
         int esq = 2 * indice + 1;
         int dir = 2 * indice + 2;
         if (esq < raiz->n)
         {
-            printf ("filho esq: %.0f, ", raiz->v[esq]);
+            printf ("filho esq: %d, ", raiz->v[esq]);
         }
         else
         {
@@ -107,7 +120,7 @@ void heapImprime (Heap *raiz, int indice)
         }
         if (dir < raiz->n)
         {
-            printf ("filho dir: %.0f.\n", raiz->v[dir]);
+            printf ("filho dir: %d.\n", raiz->v[dir]);
         }
         else
         {
@@ -118,8 +131,13 @@ void heapImprime (Heap *raiz, int indice)
     }
 }
 
-void heapBusca (Heap *raiz, float valorProcurado)
+void heapBusca (Heap *raiz, int valorProcurado)
 {
+    if (heapVazia(raiz))
+    {
+        printf ("Heap vazia.\n");
+        return;
+    }
     for (int i = 0; i < raiz->n; i++)
     {
         if (raiz->v[i] == valorProcurado)
@@ -131,7 +149,41 @@ void heapBusca (Heap *raiz, float valorProcurado)
     printf ("Valor nao encontrado.\n");
 }
 
+void menu (Heap *h)
+{
+    while (1)
+    {
+        int opcao;
+        printf ("Digite a opcao desejada: \n");
+        printf ("1) Inserir\n2) Remover\n3) Imprimir\n4) Sair\n");
+        scanf ("%d", &opcao);
+        switch (opcao)
+        {
+            case 1:
+                int valorNovo;
+                printf ("Digite o valor para inserir: ");
+                scanf ("%d", &valorNovo);
+                heapInsere (h, valorNovo);
+                break;
+            case 2:
+                heapRetira (h);
+                break;
+            case 3:
+                heapImprime (h, 0);
+                break;
+            case 4:
+                heapLibera (h);
+                return;
+        }
+    }
+}
+
 int main ()
 {
-
+    int tamanhoHeap;
+    Heap *h = NULL;
+    printf ("Digite o tamanho maximo da heap: ");
+    scanf ("%d", &tamanhoHeap);
+    h = heapCria (tamanhoHeap);
+    menu (h);
 }
