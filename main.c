@@ -27,9 +27,9 @@ void troca (Heap *raiz, int indiceFilho, int indicePai)
 void sobe (Heap *raiz, int indiceFilho)
 {
     int indicePai = (indiceFilho-1)/2;
-    while (indiceFilho >= 0)                                    // itera enquanto nao chegar na raiz
+    while (indiceFilho >= 0)
     {
-        if (raiz->v[indicePai] >= raiz->v[indiceFilho])        // se o valor do pai for maior ou igual
+        if (raiz->v[indicePai] >= raiz->v[indiceFilho])
         {
             break;
         }        
@@ -67,15 +67,14 @@ void heapInsere (Heap *raiz, int novoValor)
 void desce (Heap *raiz, int indicePai)
 {
     int indiceFilhoEsq = (2 * indicePai + 1);
-    while (indiceFilhoEsq < raiz->n) // enquanto estiver nos limites da heap
+    while (indiceFilhoEsq < raiz->n)
     {
         int indiceFilhoDir = (2 * indicePai + 2);
         if ((indiceFilhoDir < raiz->n) && (raiz->v[indiceFilhoDir] > raiz->v[indiceFilhoEsq]))
         {
-            indiceFilhoEsq = indiceFilhoDir;    // troca os filhos de lugar, se necessario
-                                                // para o maior ficar na esquerda.
+            indiceFilhoEsq = indiceFilhoDir;
         }
-        if (raiz->v[indicePai] > raiz->v[indiceFilhoEsq])   // se o pai for maior que o maior filho, break
+        if (raiz->v[indicePai] > raiz->v[indiceFilhoEsq])
         {
             break;
         }
@@ -93,8 +92,8 @@ void heapRetira (Heap *raiz)
         return;
     }
     int valorRetirado = raiz->v[0];
-    raiz->n--;  // decrementa o numero de elementos.
-    raiz->v[0] = raiz->v[raiz->n]; // coloca na raiz a ultima folha
+    raiz->n--;
+    raiz->v[0] = raiz->v[raiz->n];
     desce (raiz, 0);
 }
 
