@@ -49,8 +49,15 @@ int heapVazia (Heap *raiz)
 
 void heapLibera (Heap *raiz)
 {
-    free (raiz->v);
-    free (raiz);
+    if (raiz != NULL) 
+    {
+        if (raiz->v != NULL) 
+        {
+            free(raiz->v);
+            raiz->v = NULL;
+        }
+        free(raiz);
+    }
 }
 
 void heapInsere (Heap *raiz, int novoValor)
