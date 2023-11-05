@@ -1,9 +1,0 @@
-Heap:
-
-a) O que são
-
-b) Para que servem
-c) Quais as formas de implementação
-d) Quais as vantagens se comparado a outras estruturas de dados
-e) Quais as principais funções
-f) Como funcionam as principais funções
